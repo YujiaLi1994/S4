@@ -1,5 +1,5 @@
 
-library(KLClust)
+library(S4)
 n.resample=500
 n.div=500
 n.perms=500
