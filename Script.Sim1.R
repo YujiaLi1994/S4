@@ -1,4 +1,4 @@
-library(KLClust)
+library(S4)
 ##############test low dimensional function
 num_cores=10
 num_simulation=100
