@@ -58,29 +58,47 @@ k_vector<-c(2,3,4,5,6,7)
 
 ## get lambda tuning list
 wbounds_list<-mclapply(1:length(k_vector),function(i){
+
   K<-k_vector[i]
+  
   error = T
+  
   ind<-0
+  
   while(error){
+  
     result= tryCatch(region.lambda(lam1=3,iteration=30,x,K), error = function(x) NA)
+    
     if(!is.na(result[1])){
+    
       error = F
+      
     }
     ind<-ind+1
+    
     if(ind>3){break}
+    
   }
+  
   return(result)
   
 },mc.cores = 20)
 
 for(l in 1:length(k_vector)){
+
   temp<-KMeansSparseCluster(x,K=k_vector[l],wbounds=wbounds_list[[l]],nstart=100)
+  
   num<-rep(0,length(temp))
+  
   for(i in 1:length(num)){
+  
     num[i]<-sum(temp[[i]]$ws>0)
+    
   }
   if(sum(num==ncol(x))>0){
+  
     wbounds_list[[l]]<-wbounds_list[[l]][1:(min(which(num==ncol(x)))-2)]
+    
   }
 }
 ## implementing S4, extended Gap and extended Prediction strength
