@@ -1,4 +1,4 @@
-library(KLClust)
+library(S4)
 Number_of_Simulation = 100
 K.try = 2:10 #K to try
 n.resample = 100#resampling times
