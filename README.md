@@ -17,6 +17,7 @@ For installation, we recommend to unzip the tar.gz file first and then use devto
 ## Below is the code example:
 
 ## Estimating number of Cluster in K-means
+```
   library(S4)
   
   x1<-Sim1(settings = "1")  
@@ -42,8 +43,9 @@ For installation, we recommend to unzip the tar.gz file first and then use devto
   H<-K.Clust(x1,method="H",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
   
   Sil<-K.Clust(x1,method="silhouette",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
-  
+``` 
 ## Estimating Cluster number and sparsity parameter simultaneously for sparse K-means
+```
 library(S4)
 
 n.resample=50
@@ -55,7 +57,7 @@ n.perms=50
 x<-ds.GSE17855$data
 
 k_vector<-c(2,3,4,5,6,7)
-
+```
 ## get lambda tuning list
 ```
 wbounds_list<-mclapply(1:length(k_vector),function(i){
@@ -84,7 +86,9 @@ wbounds_list<-mclapply(1:length(k_vector),function(i){
   return(result)
   
 },mc.cores = 20)
-
+```
+## delete large lambda which will select all the features
+```
 for(l in 1:length(k_vector)){
 
     temp<-KMeansSparseCluster(x,K=k_vector[l],wbounds=wbounds_list[[l]],nstart=100)
