@@ -7,72 +7,70 @@ Third, nine high-dimensional datasets are also included with name starting with 
 Finally, an efficient algorithm for generate Lambda grid for each K is included in the region.lambda 
 and several simulation functions are included in Sim1, Sim2 and Sim3.
 
+The R script contains all the code to reproduce the result in the following paper:
+Paper: Li, Yujia, et al. "Simultaneous Estimation of Number of Clusters and Feature Sparsity in Clustering High-Dimensional Data." arXiv preprint arXiv:1909.01930 (2019).
+
 ### Installing
 
-For installation, we recommend to unzip the tar.gz file first and then use devtools::install() to install the package, which can make sure to install all the depends. Make sure R package truncnorm, gplots, sparcl, mclust, edgeR, mvtnorm, MCMCpack and Brobdingnag have all been properly imported.
+For installation, we recommend to unzip the tar.gz file first and then use devtools::install() to install the package, which can make sure to install all the depends. Make sure R package mvtnorm, caret, clues, parallel, irr, plyr,cluster, fpc, MCMCpack, MASS, sparcl, ggplot2 have all been properly imported.
 
+## Below is the code example:
 
-## The following shows how to get result for one run of simulation.
+## Estimating number of Cluster in K-means
+   library(S4)
+  x1<-Sim1(settings = "1")  
+  gaprs_pca <- K.Clust(x1,method="Gap.PCA",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  gaprs_unif <- K.Clust(x1,method="Gap.Unif",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  ps <- K.Clust(x1,method="PS",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  jm = K.Clust(x1,method="Jump",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
+  CH<-K.Clust(x1,method="CH",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  rboot<-K.Clust(x1,method="FW",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  re_sens<-K.Clust(x1,method="LD",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  #taylor_null <- taylor.clustering_trim(x1,K.try = 2:10,n.resample=n.resample,specificity=TRUE,n.null=n.null,subnull=TRUE,trim=trim)
+  res.S4 <- K.Clust(x1,method="S4",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
+  KL<-K.Clust(x1,method="KL",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  H<-K.Clust(x1,method="H",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  Sil<-K.Clust(x1,method="silhouette",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  return(list(gap_pca=gaprs_pca,gap_unif=gaprs_unif,jump=jm,CH=CH,KL=KL,H=H,Sil=Sil,
+              prediction_strength=ps,rboot=rboot,re_sens=re_sens,S4=res.S4))
 
-## Simulate the data
-library(snbClust)
+## Estimating Cluster number and sparsity parameter simultaneously for sparse K-means
+library(S4)
+n.resample=50
+n.div=50
+n.perms=50
+x<-ds.GSE17855$data
+k_vector<-c(2,3,4,5,6,7)
+## get lambda tuning list
+wbounds_list<-mclapply(1:length(k_vector),function(i){
+  K<-k_vector[i]
+  error = T
+  ind<-0
+  while(error){
+    result= tryCatch(region.lambda(lam1=3,iteration=30,x,K), error = function(x) NA)
+    if(!is.na(result[1])){
+      error = F
+    }
+    ind<-ind+1
+    if(ind>3){break}
+  }
+  return(result)
+  
+},mc.cores = 20)
 
-load('BRCA_data.RData') ####Use real data to guide the simulatiom
-
-empirical_dist<-apply(data$data,1,mean)
-
-sim_disp<-data$disp
-
-#eff_a is the effect size to tune, generally eff_a large than 0.8 will be strongly enough to give good separation.
-
-sim.data<-Sim.Independent(ngenes=1000,eff_a=1,percent_DE=0.15,sim_disp,empirical_dist) #####simulation data according to simulation 2 in the paper.
-
-disp<-1/estimateDisp(sim.data)$tagwise.dispersion
-
-est_lib<-calcNormFactors(sim.data)
-
-## SnbClust
-y1<-cpm(sim.data,prior.count=0.25,log=T)
-
-data.sd<-t(apply(y1,1,function(x) (x-mean(x))))
-
-result<-KMeansSparseCluster(t(data.sd),K=3,nstart=150)
-
-center1<-apply(sim.data[,which(result[[20]]$Cs==1)],1,mean)
-
-center2<-apply(sim.data[,which(result[[20]]$Cs==2)],1,mean)
-
-center3<-apply(sim.data[,which(result[[20]]$Cs==3)],1,mean)
-
-center<-cbind(center1,center2,center3)
-
-center[which(center==0)]<-0.1
-
-#snbClust code
-
-tune<-seq(0,12,0.75)
-
-model_nb<-lapply(1:length(tune),function(i){
-  res<-snbClust(data=sim.data,lib=est_lib,k=3,phi=disp,c_center=center,penalize=TRUE,tune=tune[i],max_iter_beta = 500)
-  return(res)
-})
-
-
-## SgClust
-
-result<-KMeansSparseCluster(t(data.sd),K=3,nstart=150)
-
-center1<-apply(data.sd[,which(result[[20]]$Cs==1)],1,mean)
-
-center2<-apply(data.sd[,which(result[[20]]$Cs==2)],1,mean)
-
-center3<-apply(data.sd[,which(result[[20]]$Cs==3)],1,mean)
-
-center_gauss<-cbind(center1,center2,center3)
-
-tuning_param_gauss<-seq(0,4,0.5)
-
-model_gauss<-lapply(1:length(tuning_param_gauss),function(i){
-  res<-sgClust(data=data.sd,c_center=center_gauss,lambda=tuning_param_gauss[i],K=3)
-  return(res)
-})
+for(l in 1:length(k_vector)){
+  temp<-KMeansSparseCluster(x,K=k_vector[l],wbounds=wbounds_list[[l]],nstart=100)
+  num<-rep(0,length(temp))
+  for(i in 1:length(num)){
+    num[i]<-sum(temp[[i]]$ws>0)
+  }
+  if(sum(num==ncol(x))>0){
+    wbounds_list[[l]]<-wbounds_list[[l]][1:(min(which(num==ncol(x)))-2)]
+  }
+}
+## implementing S4, extended Gap and extended Prediction strength
+res.s4 = KL.S4(x, lambda_list=wbounds_list,trim=0.05,k_vector=k_vector,n.resample=n.resample,num.cores=20)
+res.gap<-KL.Gap(x,k_vector=k_vector,lambda_list=wbounds_list,n.perms=n.perms,num.cores=10)
+res.ps<-KL.PS(x,lambda_list=wbounds_list,cv=2,k_vector=k_vector,M=n.div,num.cores=10)
