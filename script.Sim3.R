@@ -1,4 +1,4 @@
-library(KLClust)
+library(S4)
 num_simulation=10
 num_cores=10
 n.resample = 25 #resampling times
