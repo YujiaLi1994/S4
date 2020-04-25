@@ -17,32 +17,45 @@ For installation, we recommend to unzip the tar.gz file first and then use devto
 ## Below is the code example:
 
 ## Estimating number of Cluster in K-means
-   library(S4)
+  library(S4)
+  
   x1<-Sim1(settings = "1")  
+  
   gaprs_pca <- K.Clust(x1,method="Gap.PCA",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
   gaprs_unif <- K.Clust(x1,method="Gap.Unif",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
   ps <- K.Clust(x1,method="PS",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
   jm = K.Clust(x1,method="Jump",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
   
   CH<-K.Clust(x1,method="CH",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
   rboot<-K.Clust(x1,method="FW",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
   re_sens<-K.Clust(x1,method="LD",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
-  #taylor_null <- taylor.clustering_trim(x1,K.try = 2:10,n.resample=n.resample,specificity=TRUE,n.null=n.null,subnull=TRUE,trim=trim)
+  
   res.S4 <- K.Clust(x1,method="S4",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
   
   KL<-K.Clust(x1,method="KL",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
   H<-K.Clust(x1,method="H",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
+  
   Sil<-K.Clust(x1,method="silhouette",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=n.resample)
-  return(list(gap_pca=gaprs_pca,gap_unif=gaprs_unif,jump=jm,CH=CH,KL=KL,H=H,Sil=Sil,
-              prediction_strength=ps,rboot=rboot,re_sens=re_sens,S4=res.S4))
-
+  
 ## Estimating Cluster number and sparsity parameter simultaneously for sparse K-means
 library(S4)
+
 n.resample=50
+
 n.div=50
+
 n.perms=50
+
 x<-ds.GSE17855$data
+
 k_vector<-c(2,3,4,5,6,7)
+
 ## get lambda tuning list
 wbounds_list<-mclapply(1:length(k_vector),function(i){
   K<-k_vector[i]
@@ -72,5 +85,7 @@ for(l in 1:length(k_vector)){
 }
 ## implementing S4, extended Gap and extended Prediction strength
 res.s4 = KL.S4(x, lambda_list=wbounds_list,trim=0.05,k_vector=k_vector,n.resample=n.resample,num.cores=20)
+
 res.gap<-KL.Gap(x,k_vector=k_vector,lambda_list=wbounds_list,n.perms=n.perms,num.cores=10)
+
 res.ps<-KL.PS(x,lambda_list=wbounds_list,cv=2,k_vector=k_vector,M=n.div,num.cores=10)
