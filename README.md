@@ -57,6 +57,7 @@ x<-ds.GSE17855$data
 k_vector<-c(2,3,4,5,6,7)
 
 ## get lambda tuning list
+```
 wbounds_list<-mclapply(1:length(k_vector),function(i){
 
   K<-k_vector[i]
@@ -86,23 +87,27 @@ wbounds_list<-mclapply(1:length(k_vector),function(i){
 
 for(l in 1:length(k_vector)){
 
-  temp<-KMeansSparseCluster(x,K=k_vector[l],wbounds=wbounds_list[[l]],nstart=100)
+    temp<-KMeansSparseCluster(x,K=k_vector[l],wbounds=wbounds_list[[l]],nstart=100)
   
-  num<-rep(0,length(temp))
+    num<-rep(0,length(temp))
   
-  for(i in 1:length(num)){  
+    for(i in 1:length(num)){  
   
-   num[i]<-sum(temp[[i]]$ws>0)
+    num[i]<-sum(temp[[i]]$ws>0)
     
-  }
-  if(sum(num==ncol(x))>0){  
+   }
+   if(sum(num==ncol(x))>0){  
+     
     wbounds_list[[l]]<-wbounds_list[[l]][1:(min(which(num==ncol(x)))-2)]
     
   }
 }
+```
 ## implementing S4, extended Gap and extended Prediction strength
+```
 res.s4 = KL.S4(x, lambda_list=wbounds_list,trim=0.05,k_vector=k_vector,n.resample=n.resample,num.cores=20)
 
 res.gap<-KL.Gap(x,k_vector=k_vector,lambda_list=wbounds_list,n.perms=n.perms,num.cores=10)
 
 res.ps<-KL.PS(x,lambda_list=wbounds_list,cv=2,k_vector=k_vector,M=n.div,num.cores=10)
+```
