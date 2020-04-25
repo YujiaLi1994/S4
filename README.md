@@ -67,16 +67,16 @@ wbounds_list<-mclapply(1:length(k_vector),function(i){
   
   while(error){
   
-    result= tryCatch(region.lambda(lam1=3,iteration=30,x,K), error = function(x) NA)
+   result= tryCatch(region.lambda(lam1=3,iteration=30,x,K), error = function(x) NA)
     
-    if(!is.na(result[1])){
+   if(!is.na(result[1])){
     
-      error = F
+   error = F
       
-    }
+   }
     ind<-ind+1
     
-    if(ind>3){break}
+   if(ind>3){break}
     
   }
   
@@ -90,13 +90,12 @@ for(l in 1:length(k_vector)){
   
   num<-rep(0,length(temp))
   
-  for(i in 1:length(num)){
+  for(i in 1:length(num)){  
   
-    num[i]<-sum(temp[[i]]$ws>0)
+   num[i]<-sum(temp[[i]]$ws>0)
     
   }
-  if(sum(num==ncol(x))>0){
-  
+  if(sum(num==ncol(x))>0){  
     wbounds_list[[l]]<-wbounds_list[[l]][1:(min(which(num==ncol(x)))-2)]
     
   }
