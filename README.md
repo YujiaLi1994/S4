@@ -76,7 +76,6 @@ All the datasets are imported and accessible after library(S4).
 # ds.GSE13159                  Microarray data of Leukemia after preprocessing(GSE13159)
 # ds.GSE17855                  Microarray data of leukemia after preprocessing(GSE17855)
 # ds.GSE47474                  RNA Sequencing data of rat brain after
-# preprocessing(GSE47474)
 # ds.GSE6891                   Microarray data of leukemia after preprocessing(GSE6891)
 # ds.ISOLET                    letter-name dataset after preprocessing
 # ds.Leaf                      Plant species leaves dataset after preprocessing
