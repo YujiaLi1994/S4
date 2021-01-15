@@ -1,6 +1,6 @@
 # S4
 
-This package includes the following parts. First, Three methods (extended gap statistic, extedned prediction strength and S4) for estimating K and lambda simultaneously in sparse K-means are included in KL.Gap, KL.PS and KL.S4 respectively. Second, 11 methods for estimating K in K-means are included in K.Clust function. Third, nine high-dimensional datasets are also included with name starting with ``ds". Several simulation functions are included in Sim1, Sim2 and Sim3. The extensive simulation settings and real applications in this paper can also serve as a standard benchmark for evaluation purpose when new methods for simultaneous estimation of K and lambda are developed. Finally, an efficient algorithm for generate lambda grid for each K is included in the region.lambda.
+This package includes the following parts. First, Three methods (extended gap statistic, extedned prediction strength and S4) for estimating `K` and `lambda` simultaneously in sparse K-means are included in `KL.Gap`, `KL.PS` and `KL.S4` respectively. Second, 11 methods for estimating K in K-means are included in `K.Clust` function. Third, 9 high-dimensional datasets are also included with name starting with `ds`. Several simulation functions are included in `Sim1`, `Sim2` and `Sim3`. The extensive simulation settings and real applications in this paper can also serve as a standard benchmark for evaluation purpose when new methods for simultaneous estimation of K and lambda are developed. Finally, an efficient algorithm for generate lambda grid for each K is included in the `region.lambda`.
 
 The R scripts contains all the code to reproduce the result in the following paper:
 Paper: Li, Yujia, et al. "Simultaneous Estimation of Number of Clusters and Feature Sparsity Parameter in High-dimensional clustering analysis". Biometrics, accepted (2021). A previous arxiv version: arXiv:1909.01930
@@ -11,7 +11,7 @@ S4 package files are in `S4/` folder, You can install by copying and paste the f
 ```
 devtools::install_github("YujiaLi1994/S4/S4")
 ```
-Alternatively, download the `tar.gz` zipped file, unzip it and install ogClust package using devtools::install(), which can make sure to install all the dependences. Make sure R packages mvtnorm, caret, parallel, irr, plyr,cluster, fpc, MCMCpack, MASS, sparcl have all been properly imported.
+Alternatively, download the `tar.gz` zipped file, unzip it and install ogClust package using `devtools::install()`, which can make sure to install all the dependences. Make sure R packages mvtnorm, caret, parallel, irr, plyr,cluster, fpc, MCMCpack, MASS, sparcl have all been properly imported.
 
 
 ## Estimating Number of Cluster K for K-means
