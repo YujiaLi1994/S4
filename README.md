@@ -33,7 +33,7 @@ res.PS<-K.Clust(data$x,method="PS",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resa
 ```r
 data<-Sim2(h=200,q = 50,u=0.8)#For demo purpose, we use 200 features in total for fast result. 
 
-k_vector<-2:7
+k_vector<-2:7#K is selected from 2 to 7
 ```
 * Use Efficient Algorithm for Choosing Grids of lambda for each K
 ```r
@@ -42,15 +42,15 @@ for(l in 1:length(k_vector)){#for each K, using the algorithm to get 20 lambda.
   wbounds_list[[l]] = region.lambda(lam1=1.5,iteration=20,data,k_vector[l])
 }
 ```
-* Delete lambda which will select all the feature, since our S4 method calculate specificity, the lambda selecting all the genes must be removed.
+* Delete lambda which will select all the feature, since our S4 method calculate specificity, the lambda selecting all the genes must be removed. Including very large lambda (that select all feature) has the possibility to cause an error.
 ```r
 for(l in 1:length(k_vector)){
   temp<-KMeansSparseCluster(data,K=k_vector[l],wbounds=wbounds_list[[l]],nstart=100)
   num<-rep(0,length(temp))
-  for(i in 1:length(num)){
+  for(i in 1:length(num)){#get the corresponding number of features for each K and each lambda
     num[i]<-sum(temp[[i]]$ws>0)
   }
-  if(sum(num==ncol(data))>0){
+  if(sum(num==ncol(data))>0){For each K, if a certain lambda selects all features, delete it. For a large simulation study, two closest lambda next to it can also be removed to be conservative.
     wbounds_list[[l]]<-wbounds_list[[l]][1:(min(which(num==ncol(data)))-3)]
   }
 }
@@ -61,7 +61,7 @@ for(l in 1:length(k_vector)){
 res.S4<-KL.S4(x=data,lambda_list = wbounds_list,k_vector = k_vector,trim =0.05,n.resample = 50,num.cores = 1)
 ```
 
-*Implement extended Gap and extended Prediction strength
+* Implement extended Gap and extended Prediction strength
 ```r
 #run extended Gap statistic method
 res.Gap<-KL.Gap(x=data,lambda_list = wbounds_list,k_vector = k_vector,n.perm = 50,num.cores = 1)
