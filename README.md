@@ -69,7 +69,7 @@ res.Gap<-KL.Gap(x=data,lambda_list = wbounds_list,k_vector = k_vector,n.perm = 5
 #run extended Prediction strength method
 res.PS<-KL.PS(x=data,lambda_list = wbounds_list,k_vector = k_vector,cv = 2,M=20,num.cores = 1,cutoff = 0.8)
 ```
-##Access nine real datasets used in S4 paper
+## Access nine real datasets used in S4 paper
 All the datasets are imported and accessible after library(S4).
 ```r
 #Data sets in package ‘S4’:
