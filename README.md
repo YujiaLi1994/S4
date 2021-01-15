@@ -50,7 +50,8 @@ for(l in 1:length(k_vector)){
   for(i in 1:length(num)){#get the corresponding number of features for each K and each lambda
     num[i]<-sum(temp[[i]]$ws>0)
   }
-  if(sum(num==ncol(data))>0){#For each K, if a certain lambda selects all features, delete it. For a large simulation study, two closest lambda next to it can also be removed to be conservative.
+  if(sum(num==ncol(data))>0){#For each K, if a certain lambda selects all features, delete it. 
+  #For a large simulation study, two closest lambda next to it can also be removed to be conservative.
     wbounds_list[[l]]<-wbounds_list[[l]][1:(min(which(num==ncol(data)))-3)]
   }
 }
