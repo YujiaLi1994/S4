@@ -28,7 +28,7 @@ res.S4<-K.Clust(data$x,method="S4",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resa
 res.PS<-K.Clust(data$x,method="PS",Kmin=2,Kmax=10,trim.S4=0.05,cutoff=0.8,n.resample=50)
 ``` 
 ## Estimating Number of Clusters K and sparsity parameter lambda simultaneously for sparse K-means
-*Simulate a dataset using Sim2 function.
+* Simulate a dataset using Sim2 function.
 
 ```r
 data<-Sim2(h=200,q = 50,u=0.8)#For demo purpose, we use 200 features in total for fast result. 
