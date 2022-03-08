@@ -11,7 +11,7 @@ S4 package files are in `S4/` folder, You can install by copying and paste the f
 ```
 devtools::install_github("YujiaLi1994/S4/S4")
 ```
-Alternatively, download the `tar.gz` zipped file, unzip it and install ogClust package using `devtools::install()`, which can make sure to install all the dependences. Make sure R packages mvtnorm, caret, parallel, irr, plyr,cluster, fpc, MCMCpack, MASS, sparcl have all been properly imported.
+Alternatively, download the `tar.gz` zipped file, unzip it and install S4 package using `devtools::install()`, which can make sure to install all the dependences. Make sure R packages mvtnorm, caret, parallel, irr, plyr,cluster, fpc, MCMCpack, MASS, sparcl have all been properly imported.
 
 
 ## Estimating Number of Cluster K for K-means
